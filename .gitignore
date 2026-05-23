@@ -1,0 +1,110 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+downloads/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*,cover
+
+# Translations
+*.mo
+*.pot
+
+# Django / Flask / general local files
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.webassets-cache
+
+# Sphinx builds
+docs/_build/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+venv.bak/
+
+# Pipenv
+Pipfile.lock
+
+# pyenv
+.python-version
+
+# Environments and secrets
+.env
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+logs/*.log
+
+# Jupyter
+.ipynb_checkpoints
+
+# Type checkers / caches
+.mypy_cache/
+.pyre/
+.pytype/
+
+# Profiling
+.prof
+
+# Local pycache patterns
+**/__pycache__/
+
+# Test artifacts
+test_output/
+
+# Misc
+*.egg
+*.whl
+
+# Keep the repo clean
+.coverage
+coverage.xml
+
+# End of file
