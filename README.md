@@ -4,12 +4,12 @@ An AI-powered customer support workflow orchestration system built using LangGra
 
 This project was developed as an internship assignment to demonstrate:
 
-* AI workflow orchestration
-* SOP-grounded customer support
-* lead qualification workflows
-* escalation handling
-* structured conversation summaries
-* stateful conversational memory
+- AI workflow orchestration
+- SOP-grounded customer support
+- lead qualification workflows
+- escalation handling
+- structured conversation summaries
+- stateful conversational memory
 
 The system supports FAQ answering, lead qualification, escalation detection, and session summarization using a deterministic AI workflow architecture.
 
@@ -17,23 +17,23 @@ The system supports FAQ answering, lead qualification, escalation detection, and
 
 # Features
 
-* SOP-grounded FAQ answering
-* Multi-turn conversational workflow
-* Hybrid escalation system
+- SOP-grounded FAQ answering
+- Multi-turn conversational workflow
+- Hybrid escalation system
+  - Rule-based escalation
+  - LLM-based semantic escalation
 
-  * Rule-based escalation
-  * LLM-based semantic escalation
-* Lead qualification flow
-* Structured JSON outputs
-* Session summary generation
-* SQLite-based persistence
-* Multi-provider LLM support
+- Lead qualification flow
+- Structured JSON outputs
+- Session summary generation
+- SQLite-based persistence
+- Multi-provider LLM support
+  - Gemini
+  - OpenAI
+  - Claude
 
-  * Gemini
-  * OpenAI
-  * Claude
-* Transcript auto-generation
-* CLI-based conversational interface
+- Transcript auto-generation
+- CLI-based conversational interface
 
 ---
 
@@ -140,10 +140,10 @@ The assistant answers customer queries strictly using the provided SOP knowledge
 
 Key capabilities:
 
-* grounded responses
-* hallucination prevention
-* confidence scoring
-* structured outputs
+- grounded responses
+- hallucination prevention
+- confidence scoring
+- structured outputs
 
 ---
 
@@ -153,9 +153,9 @@ When the customer shows booking or consultation intent, the system transitions i
 
 Collected information:
 
-* business type
-* team size
-* current tools/systems
+- business type
+- team size
+- current tools/systems
 
 ---
 
@@ -165,16 +165,16 @@ Escalation runs continuously during conversations.
 
 Escalation triggers include:
 
-* complaints
-* medical questions
-* angry sentiment
-* pricing negotiation
-* human handoff requests
+- complaints
+- medical questions
+- angry sentiment
+- pricing negotiation
+- human handoff requests
 
 The system uses a hybrid escalation architecture:
 
-* deterministic keyword rules
-* semantic LLM classification
+- deterministic keyword rules
+- semantic LLM classification
 
 ---
 
@@ -182,11 +182,11 @@ The system uses a hybrid escalation architecture:
 
 At the end of the session, the system generates:
 
-* customer intent summary
-* collected lead details
-* SOP gaps
-* escalation reason
-* recommended next action
+- customer intent summary
+- collected lead details
+- SOP gaps
+- escalation reason
+- recommended next action
 
 Summaries are stored in SQLite and exported into markdown transcripts.
 
@@ -218,10 +218,10 @@ Would you like to book a free consultation?
 
 The system intentionally avoids autonomous agent architectures and instead uses deterministic workflow routing for:
 
-* reliability
-* explainability
-* easier debugging
-* safer escalation handling
+- reliability
+- explainability
+- easier debugging
+- safer escalation handling
 
 ---
 
@@ -229,10 +229,10 @@ The system intentionally avoids autonomous agent architectures and instead uses 
 
 All critical LLM interactions return structured JSON outputs to improve:
 
-* consistency
-* validation
-* reliability
-* downstream processing
+- consistency
+- validation
+- reliability
+- downstream processing
 
 ---
 
@@ -246,8 +246,8 @@ Responses are constrained to SOP information to minimize hallucinations and unsa
 
 Escalation combines:
 
-* rule-based safety checks
-* semantic LLM classification
+- rule-based safety checks
+- semantic LLM classification
 
 This improves both reliability and conversational flexibility.
 
@@ -327,9 +327,9 @@ python -m app.cli.chat
 
 The system automatically generates:
 
-* SQLite conversation persistence
-* markdown transcripts
-* structured session summaries
+- SQLite conversation persistence
+- markdown transcripts
+- structured session summaries
 
 Transcript examples are stored in:
 
