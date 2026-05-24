@@ -341,4 +341,4 @@ test_transcripts/
 
 # Author
 
-Sid Naik
+Sidhant Naik
