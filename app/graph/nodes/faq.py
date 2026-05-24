@@ -4,12 +4,18 @@ from langchain_core.messages import SystemMessage, HumanMessage
 
 from app.graph.state import ConversationState
 
-from app.core.config import settings
+from app.core.config import settings, DEBUG
 from app.llm.factory import LLMFactory
 
 from app.prompts.faq_prompt import FAQ_SYSTEM_PROMPT
+from app.prompts.qualification_prompt import QUALIFICATION_INTRO
 from app.services.sop_loader import load_sop
 from app.services.escalation_logger import log_escalation
+from app.services.qualification_service import QUALIFICATION_FLOW
+from app.services.router_service import (
+    should_start_qualification,
+    should_offer_consultation,
+)
 
 
 async def faq_node(state: ConversationState):
@@ -21,6 +27,22 @@ async def faq_node(state: ConversationState):
     sop_text = load_sop()
 
     user_message = state["current_user_message"]
+
+    # START QUALIFICATION FLOW
+
+    if state["conversation_mode"] == "faq" and should_start_qualification(user_message):
+
+        state["conversation_mode"] = "qualification"
+
+        state["qualification_stage"] = 1
+
+        state["pending_question"] = QUALIFICATION_FLOW[0]["question"]
+
+        state["final_response"] = (
+            f"{QUALIFICATION_INTRO.strip()}\n\n" f"{QUALIFICATION_FLOW[0]['question']}"
+        )
+
+        return state
 
     messages = [
         SystemMessage(content=FAQ_SYSTEM_PROMPT),
@@ -35,7 +57,9 @@ Customer Question:
     ]
 
     response = await llm.ainvoke(messages)
-    print("LLM RAW: ", response.content)
+
+    if DEBUG:
+        print("LLM RAW: ", response.content)
 
     try:
 
@@ -45,16 +69,18 @@ Customer Question:
 
         parsed_response = json.loads(cleaned_response)
 
-        print("\nPARSED RESPONSE:\n")
+        if DEBUG:
+            print("\nPARSED RESPONSE:\n")
 
         # Validate consistency: if requires_escalation is true, sop_supported should be false
         if parsed_response.get("requires_escalation", False) and parsed_response.get(
             "sop_supported", False
         ):
             parsed_response["sop_supported"] = False
-            print(
-                "[CONSISTENCY FIX] Corrected sop_supported to false (was true but requires_escalation is true)"
-            )
+            if DEBUG:
+                print(
+                    "[CONSISTENCY FIX] Corrected sop_supported to false (was true but requires_escalation is true)"
+                )
 
         if parsed_response["confidence"] < 0.6 or not parsed_response["sop_supported"]:
             state["escalation_required"] = True
@@ -71,12 +97,14 @@ Customer Question:
                 confidence_score=parsed_response.get("confidence", 0.0),
                 sop_supported=parsed_response.get("sop_supported", False),
             )
-            print(parsed_response)
+            if DEBUG:
+                print(parsed_response)
 
     except Exception as e:
 
-        print("\nJSON PARSE ERROR:\n")
-        print(e)
+        if DEBUG:
+            print("\nJSON PARSE ERROR:\n")
+            print(e)
 
         parsed_response = {
             "response": (
@@ -114,21 +142,20 @@ Customer Question:
                 sop_supported=parsed_response.get("sop_supported", False),
             )
 
-    # Suggest booking if SOP supported the answer and message implies booking intent
+    # AFTER SUCCESSFUL FAQ RESPONSE: track interactions and optionally offer consultation
     try:
-        if (
-            not state.get("escalation_required", False)
-            and parsed_response.get("sop_supported", False)
-            and parsed_response.get("confidence", 0.0) >= 0.6
+        # increment FAQ interaction counter
+        state["faq_interaction_count"] = state.get("faq_interaction_count", 0) + 1
+
+        if not state.get("qualification_complete", False) and should_offer_consultation(
+            user_message,
+            state["faq_interaction_count"],
         ):
-            booking_keywords = ["price", "consultation", "booking", "service"]
-            lower_msg = (user_message or "").lower()
-            if any(k in lower_msg for k in booking_keywords):
-                state.setdefault("final_response", "")
-                state[
-                    "final_response"
-                ] += "\n\nWould you like to book a free consultation?"
-                state["booking_suggested"] = True
+            state.setdefault("final_response", "")
+            state["final_response"] += (
+                "\n\nWould you like to book " "a free consultation?"
+            )
+            state["booking_suggested"] = True
     except Exception:
         pass
 

@@ -1,18 +1,10 @@
 from app.graph.state import ConversationState
 
-from app.services.qualification_service import QUALIFICATION_QUESTIONS
-
-from app.prompts.qualification_prompt import QUALIFICATION_INTRO
-
+from app.services.qualification_service import QUALIFICATION_FLOW
 
 async def qualification_node(state: ConversationState):
 
     print("\n[Qualification Node Executed]")
-
-    # SKIP IF ESCALATED
-
-    if state["escalation_required"]:
-        return state
 
     stage = state["qualification_stage"]
 
@@ -20,33 +12,35 @@ async def qualification_node(state: ConversationState):
 
     # STORE PREVIOUS ANSWER
 
-    if stage == 1:
+    if stage > 0:
 
-        state["lead_data"]["business_type"] = user_message
+        previous = QUALIFICATION_FLOW[stage - 1]
 
-    elif stage == 2:
+        state["lead_data"][previous["field"]] = user_message
 
-        state["lead_data"]["team_size"] = user_message
+    # CHECK COMPLETION
 
-    elif stage == 3:
-
-        state["lead_data"]["current_tools"] = user_message
+    if stage >= len(QUALIFICATION_FLOW):
 
         state["qualification_complete"] = True
+
+        state["conversation_mode"] = "faq"
+
+        state["final_response"] = (
+            "Thank you for the information. " "Our team will contact you shortly."
+        )
 
         return state
 
     # ASK NEXT QUESTION
 
-    next_question = QUALIFICATION_QUESTIONS.get(stage)
+    current = QUALIFICATION_FLOW[stage]
 
-    if next_question:
+    question = current["question"]
 
-        if stage == 0:
+    state["pending_question"] = question
 
-            state["final_response"] += f"\n\n{QUALIFICATION_INTRO}"
-
-        state["final_response"] += f"\n\n{next_question}"
+    state["final_response"] = question
 
     state["qualification_stage"] += 1
 

@@ -1,5 +1,8 @@
-QUALIFICATION_QUESTIONS = {
-    0: "What type of business do you run?",
-    1: "How large is your team?",
-    2: ("What tools or systems are you " "currently using?"),
-}
+QUALIFICATION_FLOW = [
+    {"field": "business_type", "question": ("What type of business do you run?")},
+    {"field": "team_size", "question": ("How large is your team?")},
+    {
+        "field": "current_tools",
+        "question": ("What tools or systems are you " "currently using?"),
+    },
+]

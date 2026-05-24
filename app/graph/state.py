@@ -10,9 +10,15 @@ class ConversationState(TypedDict):
     current_user_message: str
 
     customer_intent: str
+    
+    faq_interaction_count: int
 
     escalation_required: bool
     escalation_reason: str
+
+    conversation_mode: str
+
+    pending_question: str
 
     confidence_score: float
 

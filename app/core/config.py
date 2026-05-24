@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Global debug flag
+DEBUG = False
+
 
 class Settings(BaseSettings):
     DEFAULT_PROVIDER: str = "gemini"
@@ -10,10 +13,9 @@ class Settings(BaseSettings):
 
     MODEL_NAME: str = "gemini-2.5-flash"
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="ignore"
-    )
+    DATABASE_URL: str
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 settings = Settings()

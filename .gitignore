@@ -99,6 +99,12 @@ logs/*.log
 # Test artifacts
 test_output/
 
+# Test Transcriptts
+test_transcripts/
+
+# Database
+closira.db
+
 # Misc
 *.egg
 *.whl

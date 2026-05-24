@@ -22,3 +22,5 @@ rich
 
 pytest
 pytest-asyncio
+
+greenlet
